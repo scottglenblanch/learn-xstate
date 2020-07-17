@@ -1,0 +1,22 @@
+{
+  "name": "example1",
+  "version": "0.0.1",
+  "description": "X State Tutorial",
+  "main": "./src/index.js",
+  "author": "Scott Blanch",
+  "license": "MIT",
+  "private": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "build": "webpack",
+    "start": "export PORT=8000 && npm run build && http-server ./dist --port=${PORT}"
+  },
+  "devDependencies": {
+    "webpack": "^4.43.0",
+    "webpack-cli": "^3.3.12"
+  },
+  "dependencies": {
+    "http-server": "^0.12.3",
+    "xstate": "^4.11.0"
+  }
+}
