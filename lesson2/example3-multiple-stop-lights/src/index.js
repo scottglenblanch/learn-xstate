@@ -49,26 +49,34 @@ const intersectionMachine = Machine({
 
 const service = interpret(intersectionMachine).onTransition(current => {
   console.log(current);
-})
+});
 
-const isNorthToSouth = (state) => state.matches(northToSouthID);
+const getNorthToSouthImageElement = () => document.body.querySelector(`#${northToSouthID}`);
 
-const isEastToWest = (state) => state.matches(eastToWestID);
-
-const getID = (state) => {
-  if (isNorthToSouth(state)) return 'northToSouth';
-  else if (isEastToWest(state)) return 'eastToWest';
-}
-
-const getStopLightColor = (state) => state.value[getID(state)];
-
-const getImageElementToUpdate = (state) => document.body.querySelector(`#${getID(state)}`);
+const getEastToWestImageElement = () => document.body.querySelector(`#${eastToWestID}`);
 
 const getButtonElement = () => document.querySelector('#button');
 
-const getImageSrc = (state) => getStopLightColor(state) + '-light.jpg';
+const updateNorthToSouthElement = state => {
+  const { northToSouth: northToSouthValue } = state.value;
 
-const updateDOM = state => getImageElementToUpdate(state).src = getImageSrc(state);
+  console.log(northToSouthValue)
+
+  getNorthToSouthImageElement().src = `${northToSouthValue}-light.jpg`;
+};
+
+const updateEastToWestElement = state => {
+  const { eastToWest: eastToWestValue } = state.value;
+
+  console.log(eastToWestValue)
+
+  getEastToWestImageElement().src = `${eastToWestValue}-light.jpg`;
+};
+
+const updateDOM = (state) => {
+  updateNorthToSouthElement(state);
+  updateEastToWestElement(state);
+}
 
 const fireWhenButtonClicked = e => {
   const newState = service.send('TIMER');
