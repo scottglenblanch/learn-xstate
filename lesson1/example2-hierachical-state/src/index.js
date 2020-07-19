@@ -3,46 +3,66 @@ import {
   interpret,
 } from 'xstate';
 
+const northToSouthID = 'northToSouth';
+const eastToWestID = 'eastToWest';
+
 const intersectionMachine = Machine({
   id: 'intersection',
   initial: 'northToSouth',
   states: {
     northToSouth: {
-      id: 'northToSouth',
+      id: northToSouthID,
       initial: 'green',
       states: {
         green: { on: { TIMER: 'yellow'} },
         yellow: { on: { TIMER: 'red' } },
         red: {
-          on: { TIMER: '.eastToWest'},
-          states: {
-            eastToWest: {
-              initial: 'green',
-              states: {
-                green: { on: { TIMER: 'yellow' } },
-                yellow: { on: { TIMER: 'red' } },
-                red: { on: { TIMER: '#northToSouth.green'}}
-              }
-            }
-          }
+          on: { TIMER: '#eastToWest.green'},
         },
+      }
+    },
+    eastToWest: {
+      id: eastToWestID,
+      initial: 'red',
+      states: {
+        green: { on: { TIMER: 'yellow' } },
+        yellow: { on: { TIMER: 'red' } },
+        red: { on: { TIMER: '#northToSouth.green'}}
       }
     }
   },
 });
 
 const service = interpret(intersectionMachine).onTransition(current => {
-  const { value } = current;
-
-  console.log(current)
+  console.log(current);
 })
 
-const addEventToButton = () => {
-  document.querySelector('#button').addEventListener('click',function(e) {
-    service.send('TIMER');
-  });
+const isNorthToSouth = (state) => state.matches(northToSouthID);
+
+const isEastToWest = (state) => state.matches(eastToWestID);
+
+const getID = (state) => {
+  if (isNorthToSouth(state)) return 'northToSouth';
+  else if (isEastToWest(state)) return 'eastToWest';
 }
 
+const getStopLightColor = (state) => state.value[getID(state)];
+
+const getImageElementToUpdate = (state) => document.body.querySelector(`#${getID(state)}`);
+
+const getButtonElement = () => document.querySelector('#button');
+
+const getImageSrc = (state) => getStopLightColor(state) + '-light.jpg';
+
+const updateDOM = state => getImageElementToUpdate(state).src = getImageSrc(state);
+
+const fireWhenButtonClicked = e => {
+  const newState = service.send('TIMER');
+
+  updateDOM(newState);
+}
+
+const addEventToButton = () => getButtonElement().addEventListener('click', fireWhenButtonClicked);
 
 const initApp = () => {
   addEventToButton();
