@@ -17,7 +17,9 @@ const intersectionMachine = Machine({
         green: { on: { TIMER: 'yellow'} },
         yellow: { on: { TIMER: 'red' } },
         red: {
-          on: { TIMER: '#eastToWest.green'},
+          on: {
+            TIMER: '#eastToWest.green',
+          },
         },
       }
     },
