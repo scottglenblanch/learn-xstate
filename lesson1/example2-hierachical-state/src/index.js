@@ -8,7 +8,7 @@ const eastToWestID = 'eastToWest';
 
 const intersectionMachine = Machine({
   id: 'intersection',
-  initial: 'northToSouth',
+  initial: northToSouthID,
   states: {
     northToSouth: {
       id: northToSouthID,
@@ -18,7 +18,7 @@ const intersectionMachine = Machine({
         yellow: { on: { TIMER: 'red' } },
         red: {
           on: {
-            TIMER: '#eastToWest.green',
+            TIMER: `#${eastToWestID}.green`,
           },
         },
       }
@@ -29,7 +29,7 @@ const intersectionMachine = Machine({
       states: {
         green: { on: { TIMER: 'yellow' } },
         yellow: { on: { TIMER: 'red' } },
-        red: { on: { TIMER: '#northToSouth.green'}}
+        red: { on: { TIMER: `#${northToSouthID}.green`}}
       }
     }
   },
