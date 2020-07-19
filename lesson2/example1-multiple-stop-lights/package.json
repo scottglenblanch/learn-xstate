@@ -1,5 +1,5 @@
 {
-  "name": "example1",
+  "name": "example1-multiple-stop-lights",
   "version": "0.0.1",
   "description": "X State Tutorial",
   "main": "./src/index.js",
